@@ -19,6 +19,9 @@ export default function HomeScreen() {
       router.push('/login');
     }
   };
+  const welcomeOpen=()=>{
+    router.push('/welcome');
+  };
 
     const openLink = async (url: string) => {
       try {
@@ -52,7 +55,9 @@ export default function HomeScreen() {
         {/* Top Navbar */}
         <View style={styles.navbar}>
           <Image source={require("../../assets/images/skillSwap.png")} style={styles.logo} />
-          <Text style={styles.title1}>SkillSwap</Text>
+          <TouchableOpacity onPress={welcomeOpen}>
+            <Text style={styles.title1}>SkillSwap</Text>
+          </TouchableOpacity>
           <ProfileMenu />
         </View>
 

@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { StyleSheet, Text, View } from "react-native";
 
 export default function TreeCounter() {
-  const [count, setCount] = useState(1000);
+  const [count, setCount] = useState(10000);
 
   useEffect(() => {
     let interval;

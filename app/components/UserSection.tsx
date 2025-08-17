@@ -92,7 +92,7 @@ const styles = StyleSheet.create({
   gridContainer: {
     flexDirection: "row",
     flexWrap: "wrap",
-    gap:7,
+    gap:22,
     justifyContent: "flex-start",
   },
   gridItem: {
