@@ -11,6 +11,7 @@ const PublicLayout = () => {
       <Stack.Screen name="login" />
       <Stack.Screen name="register" />
       <Stack.Screen name='Dashboard'/>
+      <Stack.Screen name='profile'/>
 
     </Stack>
   );

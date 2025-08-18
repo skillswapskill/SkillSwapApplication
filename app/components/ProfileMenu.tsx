@@ -13,7 +13,7 @@ import {
 
 const MENU_ITEMS = [
   { label: "Dashboard", route: "/(public)/Dashboard" },
-  { label: "Profile", route: "/auth/profile" },
+  { label: "Profile", route: "/(public)/profile" },
   { label: "Home", route: "/auth/home" },
   { label: "My Learning", route: "/auth/my-learning" },
   { label: "Redeem Credits", route: "/auth/redeem" },
