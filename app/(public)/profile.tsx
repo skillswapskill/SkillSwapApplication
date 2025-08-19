@@ -1,8 +1,11 @@
 // screens/ProfileDashboard.tsx
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { LinearGradient } from "expo-linear-gradient";
+import { useRouter } from 'expo-router';
 import React, { useState } from "react";
 import { Image, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
+import ProfileMenu from "../components/ProfileMenu";
+import Footer from "../components/footer";
 
 export default function ProfileDashboard() {
   const [credits, setCredits] = useState(300);
@@ -10,17 +13,30 @@ export default function ProfileDashboard() {
   const [creditRequired, setCreditRequired] = useState("");
   const [date, setDate] = useState(new Date());
   const [showDatePicker, setShowDatePicker] = useState(false);
+  const router=useRouter();
+
+  const welcomeOpen=()=>{
+    router.push('/welcome');
+  };
 
   const handleAddService = () => {
     console.log("Service Added:", serviceName, creditRequired, date);
   };
 
   return (
+    <View className="container1">
+      <View style={styles.navbar}>
+              <TouchableOpacity onPress={welcomeOpen}>
+                <Image source={require("../../assets/images/skillSwap.png")} style={styles.logo} />
+                <Text style={styles.title1}>SkillSwap</Text>
+              </TouchableOpacity>
+              <ProfileMenu />
+      </View>
     <ScrollView contentContainerStyle={styles.container}>
       {/* Profile Section */}
       <View style={styles.card}>
         <Image
-          source={{ uri: "https://placehold.co/100x100" }}
+          source={require("../../assets/images/user.png")}
           style={styles.avatar}
         />
         <Text style={styles.name}>Sagar Paul</Text>
@@ -104,13 +120,42 @@ export default function ProfileDashboard() {
           <Text style={styles.addButtonText}>Add Service</Text>
         </TouchableOpacity>
       </View>
+      <View style={styles.floatingIcon}>
+          <Image source={require("../../assets/images/skillSwap.png")} style={styles.iconImage} />
+      </View>
+
+    <View style={styles.footer}>
+            <Footer />
+    </View>
     </ScrollView>
+
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
+  container1:{
+    flex:1
+  },
+   navbar: {
+    flexDirection: "row",
+    marginTop: 50,
+    justifyContent: "space-between",
+    alignItems: "center",
+    paddingHorizontal: 15,
+  },
+  logo: { top:10, width: 40, height: 40, resizeMode: "contain" },
+  title1: {
+    fontSize: 20,
+    fontWeight: "bold",
+    color: "#3b7dceff",
+    position: "relative",
+    left: 45,
+    bottom:25
+  },
   container: {
-    padding: 20,
+    padding: 40,
+    bottom:30,
     alignItems: "center",
   },
   card: {
@@ -219,4 +264,15 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     fontSize: 16,
   },
+  floatingIcon: {
+    position: "absolute",
+    bottom: 122,
+    left: 20,
+    backgroundColor: "#f1f1f1",
+    padding: 10,
+    borderRadius: 30,
+    elevation: 5,
+  },
+  iconImage: { width: 24, height: 24 },
+  footer: { bottom: 40 ,padding:20},
 });
