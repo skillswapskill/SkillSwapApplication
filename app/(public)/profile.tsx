@@ -32,6 +32,7 @@ export default function ProfileDashboard() {
               </TouchableOpacity>
               <ProfileMenu />
       </View>
+      <View style={styles.separator} />
     <ScrollView contentContainerStyle={styles.container}>
       {/* Profile Section */}
       <View style={styles.card}>
@@ -144,6 +145,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     paddingHorizontal: 15,
   },
+  separator:{height: 1, backgroundColor: "#aeadadff", marginVertical: 6 , bottom:4},
   logo: { top:10, width: 40, height: 40, resizeMode: "contain" },
   title1: {
     fontSize: 20,

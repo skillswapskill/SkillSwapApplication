@@ -12,7 +12,8 @@ const PublicLayout = () => {
       <Stack.Screen name="register" />
       <Stack.Screen name='Dashboard'/>
       <Stack.Screen name='profile'/>
-
+      <Stack.Screen name='MySessions'/>
+      <Stack.Screen name='ReedemCredits'/>
     </Stack>
   );
 };

@@ -50,7 +50,7 @@ export default function DashBoard() {
 
         const formatted = data.users.map((u: { name: any; profilePic: any; }) => ({
           name: u.name,
-          image: u.profilePic || "https://placehold.co/100x100",
+          image: u.profilePic || "https://cdn-icons-png.flaticon.com/512/847/847969.png",
         }));
 
         setUsers(formatted);
@@ -87,6 +87,7 @@ export default function DashBoard() {
         </TouchableOpacity>
         <ProfileMenu />
       </View>
+      <View style={styles.separator} />
 
       {/* Greeting Banner */}
       <LinearGradient
@@ -150,6 +151,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     paddingHorizontal: 15,
   },
+  separator:{height: 1, backgroundColor: "#aeadadff", marginVertical: 6 , bottom:4},
   logo: { top:10, width: 40, height: 40, resizeMode: "contain" },
   title1: {
     fontSize: 20,

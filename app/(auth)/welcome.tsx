@@ -32,15 +32,7 @@ export default function HomeScreen() {
     };
 
       useEffect(() => {
-        const hours = new Date().getHours();
-        if (hours >= 5 && hours < 12) {
-          setBackground("#ecf5b7ff");
-        } else if (hours >= 12 && hours < 18){
-
-          setBackground("#edb7f5ff");
-        } else {
           setBackground("#b7d5f5ff");
-        }
       }, []);
 
 
@@ -60,6 +52,7 @@ export default function HomeScreen() {
           </TouchableOpacity>
           <ProfileMenu />
         </View>
+        <View style={styles.separator} />
 
         {/* Main Tagline */}
         <View style={styles.tagline}>
@@ -113,6 +106,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "center",
   },
+  separator:{height: 1,width:500, right:100, backgroundColor: "#aeadadff", marginVertical: 15 },
   logo: {
     width: 40,
     height: 40,
