@@ -1,22 +1,32 @@
+// components/UserSection.tsx
 import React, { useState } from "react";
-import { Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
-
-type User = {
-  image: string;
-  name: string;
-};
+import {
+  Image,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
+import { User } from "./types"; // ✅ Import shared User type
 
 type UserSectionProps = {
   title: string;
   onSeeAll: () => void;
-  users: User[];
+  users: User[]; // ✅ now consistent with Dashboard + Modal
+  onUserPress: (user: User) => void;
 };
 
-export default function UserSection({ title, onSeeAll, users }: UserSectionProps) {
+export default function UserSection({
+  title,
+  onSeeAll,
+  users,
+  onUserPress,
+}: UserSectionProps) {
   const [expanded, setExpanded] = useState(false);
 
   const handleSeeAll = () => {
-    setExpanded(!expanded); // toggle view
+    setExpanded(!expanded);
     onSeeAll();
   };
 
@@ -26,7 +36,9 @@ export default function UserSection({ title, onSeeAll, users }: UserSectionProps
       <View style={styles.header}>
         <Text style={styles.title}>{title}</Text>
         <TouchableOpacity onPress={handleSeeAll}>
-          <Text style={styles.seeAll}>{expanded ? "Users" : "See All Users"}</Text>
+          <Text style={styles.seeAll}>
+            {expanded ? "Users" : "See All Users"}
+          </Text>
         </TouchableOpacity>
       </View>
 
@@ -34,19 +46,31 @@ export default function UserSection({ title, onSeeAll, users }: UserSectionProps
       {expanded ? (
         <View style={styles.gridContainer}>
           {users.map((user, index) => (
-            <View key={index} style={styles.gridItem}>
+            <TouchableOpacity
+              key={index}
+              style={styles.gridItem}
+              onPress={() => onUserPress(user)}
+            >
               <Image source={{ uri: user.image }} style={styles.avatar} />
-              <Text style={styles.name} numberOfLines={1}>{user.name}</Text>
-            </View>
+              <Text style={styles.name} numberOfLines={1}>
+                {user.name}
+              </Text>
+            </TouchableOpacity>
           ))}
         </View>
       ) : (
         <ScrollView horizontal showsHorizontalScrollIndicator={false}>
           {users.map((user, index) => (
-            <View key={index} style={styles.userCard}>
+            <TouchableOpacity
+              key={index}
+              style={styles.userCard}
+              onPress={() => onUserPress(user)}
+            >
               <Image source={{ uri: user.image }} style={styles.avatar} />
-              <Text style={styles.name} numberOfLines={1}>{user.name}</Text>
-            </View>
+              <Text style={styles.name} numberOfLines={1}>
+                {user.name}
+              </Text>
+            </TouchableOpacity>
           ))}
         </ScrollView>
       )}
@@ -92,7 +116,7 @@ const styles = StyleSheet.create({
   gridContainer: {
     flexDirection: "row",
     flexWrap: "wrap",
-    gap:22,
+    gap: 22,
     justifyContent: "flex-start",
   },
   gridItem: {
