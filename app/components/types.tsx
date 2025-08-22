@@ -1,5 +1,5 @@
 export interface User {
-  clerkId: string | undefined;
+  clerkId: string;
   id: string;
   name: string;
   skills: string[];

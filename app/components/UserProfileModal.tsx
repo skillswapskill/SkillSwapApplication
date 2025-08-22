@@ -1,6 +1,6 @@
-// components/UserProfileModal.tsx
 import { BlurView } from "expo-blur";
 import { LinearGradient } from "expo-linear-gradient";
+import { useRouter } from "expo-router";
 import {
   Image,
   Modal,
@@ -9,7 +9,7 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import { User } from "./types"; // ✅ Import shared type
+import { User } from "./types";
 
 type Props = {
   user: User | null;
@@ -17,41 +17,56 @@ type Props = {
 };
 
 export default function UserProfileModal({ user, onClose }: Props) {
-  if (!user) return null;
+  const router = useRouter();
+
+  if (!user) {
+    return (
+      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+        <Text>Loading user...</Text>
+      </View>
+    );
+  }
+
+  const goToProfile = () => {
+  onClose();
+
+  if (!user) return;
+
+  router.push({
+    pathname: "/(public)/ProfileScreen",
+    params: {
+      // pass a JSON string
+      user: JSON.stringify(user),
+    },
+  });
+};
+
 
   return (
     <Modal transparent animationType="fade">
-      {/* Blurred background */}
       <BlurView intensity={80} tint="dark" style={StyleSheet.absoluteFill} />
-
       <View style={styles.center}>
         <View style={styles.card}>
-          {/* Close button */}
           <TouchableOpacity style={styles.closeBtn} onPress={onClose}>
             <Text style={{ fontSize: 20 }}>✕</Text>
           </TouchableOpacity>
 
-          {/* Profile Pic */}
           <Image source={{ uri: user.image }} style={styles.avatar} />
-
-          {/* Name */}
           <Text style={styles.name}>{user.name}</Text>
 
-         {/* Skills */}
-         <View style={styles.skillsContainer}>
-          {user.skills && user.skills.length > 0 ? (
-            user.skills.map((skill, idx) => (
-            <View key={idx} style={styles.skillChip}>
-              <Text style={styles.skillText}>{skill}</Text>
-         </View>
-        ))
-      ) : (
-    <Text style={styles.noSkillsText}>No skills added</Text>
-  )}
-</View>
+          <View style={styles.skillsContainer}>
+            {user.skills.length > 0 ? (
+              user.skills.map((skill, idx) => (
+                <View key={idx} style={styles.skillChip}>
+                  <Text style={styles.skillText}>{skill}</Text>
+                </View>
+              ))
+            ) : (
+              <Text style={styles.noSkillsText}>No skills added</Text>
+            )}
+          </View>
 
-          {/* Full Profile Button */}
-          <TouchableOpacity onPress={() => console.log("Go to full profile")}>
+          <TouchableOpacity onPress={goToProfile}>
             <LinearGradient
               colors={["#4b6cb7", "#182848"]}
               start={{ x: 0, y: 0 }}
@@ -102,7 +117,7 @@ const styles = StyleSheet.create({
     margin: 5,
   },
   skillText: { fontSize: 14, color: "#007BFF" },
-  noSkillsText:{fontSize: 14, color: "#007BFF"},
+  noSkillsText: { fontSize: 14, color: "#007BFF" },
   profileBtn: {
     marginTop: 20,
     paddingVertical: 10,

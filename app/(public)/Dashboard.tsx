@@ -86,7 +86,7 @@ export default function DashBoard() {
               u.profilePic ||
               "https://cdn-icons-png.flaticon.com/512/847/847969.png",
             skills: u.skills || ["No skills added"],
-            clerkId: u.clerkId,
+            clerkId: u.clerkId || u.id,
           })
         );
 
@@ -179,7 +179,7 @@ export default function DashBoard() {
       </View>
 
       {/* Modal */}
-      {selectedUser && (
+      {selectedUser && selectedUser.clerkId && (
         <UserProfileModal
           user={selectedUser}
           onClose={() => setSelectedUser(null)}
