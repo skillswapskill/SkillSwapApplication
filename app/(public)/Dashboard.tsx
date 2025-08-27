@@ -1,13 +1,16 @@
 // screens/DashBoard.tsx
+import { Feather } from "@expo/vector-icons";
+import { BlurView } from "expo-blur";
 import { LinearGradient } from "expo-linear-gradient";
 import { useRouter } from "expo-router";
-import { JSX, useEffect, useState } from "react";
+import { JSX, useEffect, useMemo, useState } from "react";
 import {
   ActivityIndicator,
   Image,
   ScrollView,
   StyleSheet,
   Text,
+  TextInput,
   TouchableOpacity,
   View,
 } from "react-native";
@@ -31,12 +34,16 @@ import { useUser } from "@clerk/clerk-react";
 export default function DashBoard() {
   const [greeting, setGreeting] = useState("");
   const [background, setBackground] = useState("");
-  const [users, setUsers] = useState<User[]>([]);
+  const [allUsers, setAllUsers] = useState<User[]>([]);
   const [loading, setLoading] = useState(true);
   const [SceneComponent, setSceneComponent] = useState<JSX.Element | null>(null);
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
-  const router = useRouter();
 
+  // search + toggle
+  const [search, setSearch] = useState("");
+  const [showAllUsers, setShowAllUsers] = useState(false);
+
+  const router = useRouter();
   const { user } = useUser(); // ✅ Get logged-in Clerk user
   const loggedInUserClerkId = user?.id;
 
@@ -71,7 +78,6 @@ export default function DashBoard() {
         const res = await fetch("https://skillswap.company/api/users/all");
         const data = await res.json();
 
-        // Map API data to User type
         const formatted: User[] = data.users.map(
           (u: {
             id: string;
@@ -90,12 +96,7 @@ export default function DashBoard() {
           })
         );
 
-        // ✅ Filter out the logged-in user by Clerk ID
-        const filtered = formatted.filter(
-          (u) => u.clerkId !== loggedInUserClerkId
-        );
-
-        setUsers(filtered);
+        setAllUsers(formatted);
       } catch (err) {
         console.error("Failed to fetch users:", err);
       } finally {
@@ -104,8 +105,45 @@ export default function DashBoard() {
     };
 
     fetchUsers();
-  }, [loggedInUserClerkId]);
+  }, []);
 
+  // ---------------- Filtering Logic ----------------
+  const getFilteredUsers = useMemo(() => {
+    return allUsers.filter((u) => {
+      // Exclude logged-in user
+      if (u.clerkId && loggedInUserClerkId && u.clerkId === loggedInUserClerkId)
+        return false;
+
+      return true;
+    });
+  }, [allUsers, loggedInUserClerkId]);
+
+  const getDisplayUsers = useMemo(() => {
+    const searchFiltered = getFilteredUsers.filter(
+      (u) =>
+        (u.name && u.name.toLowerCase().includes(search.toLowerCase())) ||
+        (u.skills &&
+          u.skills.some((skill) =>
+            skill.toLowerCase().includes(search.toLowerCase())
+          ))
+    );
+
+    if (search.trim()) {
+      return searchFiltered;
+    }
+
+    if (!showAllUsers) {
+      return searchFiltered.slice(0, 6);
+    }
+
+    return searchFiltered;
+  }, [getFilteredUsers, search, showAllUsers]);
+
+  const totalFilteredUsers = getFilteredUsers.length;
+  const hasMoreUsers =
+    !search.trim() && !showAllUsers && totalFilteredUsers > 6;
+
+  // ---------------- UI ----------------
   return (
     <View style={styles.container}>
       {/* Background */}
@@ -144,19 +182,46 @@ export default function DashBoard() {
           </Text>
         </LinearGradient>
 
+        {/* Enhanced Search Bar */}
+        <View style={styles.searchWrapper}>
+          <LinearGradient
+            colors={["#3b82f6", "#8b5cf6", "#ec4899"]}
+            start={{ x: 0, y: 0 }}
+            end={{ x: 1, y: 1 }}
+            style={styles.searchGlow}
+          />
+          <BlurView intensity={40} tint="light" style={styles.searchContainer}>
+            <Feather
+              name="search"
+              size={20}
+              color="#2563eb"
+              style={{ marginRight: 10 }}
+            />
+            <TextInput
+              placeholder="Dive into your Skills"
+              placeholderTextColor="#60a5fa"
+              value={search}
+              onChangeText={(text) => {
+                setSearch(text);
+                if (text.trim()) setShowAllUsers(false);
+              }}
+              style={styles.searchInput}
+            />
+          </BlurView>
+        </View>
+
         {/* Scrollable Content */}
         <ScrollView showsVerticalScrollIndicator={false}>
           {loading ? (
             <ActivityIndicator
               size="large"
               color="#007BFF"
-              style={{ marginTop: 20 }}
             />
           ) : (
             <UserSection
               title="Popular Users"
-              users={users}
-              onSeeAll={() => console.log("See All Popular Users")}
+              users={getDisplayUsers}
+              onSeeAll={() => setShowAllUsers(!showAllUsers)}
               onUserPress={(user) => setSelectedUser(user)}
             />
           )}
@@ -236,6 +301,45 @@ const styles = StyleSheet.create({
     color: "#a90060",
     marginBottom: 10,
   },
+
+  // --- New Search Bar Styles ---
+  searchWrapper: {
+    alignItems: "center",
+    marginBottom: 0,
+    marginTop: 40,
+    position: "relative",
+  },
+  searchGlow: {
+    position: "absolute",
+    width: "90%",
+    maxWidth: 350,
+    height: 55,
+    borderRadius: 30,
+    opacity: 0.35,
+  },
+  searchContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "rgba(255,255,255,0.85)",
+    borderRadius: 30,
+    paddingHorizontal: 15,
+    paddingVertical: 10,
+    width: "90%",
+    maxWidth: 350,
+    shadowColor: "#000",
+    shadowOpacity: 0.1,
+    shadowOffset: { width: 0, height: 4 },
+    shadowRadius: 8,
+    borderWidth: 1,
+    borderColor: "rgba(255,255,255,0.5)",
+  },
+  searchInput: {
+    flex: 1,
+    fontSize: 16,
+    fontWeight: "500",
+    color: "#1e40af",
+  },
+
   floatingIcon: {
     position: "absolute",
     bottom: 30,
