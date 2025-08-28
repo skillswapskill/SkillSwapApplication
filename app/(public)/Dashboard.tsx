@@ -75,7 +75,7 @@ export default function DashBoard() {
     // Fetch Users
     const fetchUsers = async () => {
       try {
-        const res = await fetch("https://skillswap.company/api/users/all");
+        const res = await fetch(`${process.env.EXPO_PUBLIC_API_BASE_URL}/api/users/all`);
         const data = await res.json();
 
         const formatted: User[] = data.users.map(

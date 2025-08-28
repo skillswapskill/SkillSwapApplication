@@ -51,7 +51,7 @@ export default function UserSection({
               style={styles.gridItem}
               onPress={() => onUserPress(user)}
             >
-              <Image source={{ uri: user.image }} style={styles.avatar} />
+              <Image source={{ uri: user.profilePic }} style={styles.avatar} />
               <Text style={styles.name} numberOfLines={1}>
                 {user.name}
               </Text>
@@ -66,7 +66,7 @@ export default function UserSection({
               style={styles.userCard}
               onPress={() => onUserPress(user)}
             >
-              <Image source={{ uri: user.image }} style={styles.avatar} />
+              <Image source={{ uri: user.profilePic }} style={styles.avatar} />
               <Text style={styles.name} numberOfLines={1}>
                 {user.name}
               </Text>
