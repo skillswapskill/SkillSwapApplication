@@ -51,7 +51,7 @@ export default function UserProfileModal({ user, onClose }: Props) {
             <Text style={{ fontSize: 20 }}>✕</Text>
           </TouchableOpacity>
 
-          <Image source={{ uri: user.profilePic }} style={styles.avatar} />
+          <Image source={{ uri: user.image }} style={styles.avatar} />
           <Text style={styles.name}>{user.name}</Text>
 
           <View style={styles.skillsContainer}>

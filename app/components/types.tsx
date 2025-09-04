@@ -3,7 +3,7 @@ export type User = {
   name: string;
   clerkId: string;
   email: string;
-  profilePic: string; // ✅ backend gives "profilePic"
+  image: string; // ✅ backend gives "profilePic"
   skills: string[];
   totalCredits?: number; // optional
 };

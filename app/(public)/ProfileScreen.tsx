@@ -74,7 +74,7 @@ const ProfileScreen = () => {
           setUser({
             ...user,
             _id: matched._id,
-            profilePic: matched.profilePic ?? user.profilePic,
+            image: matched.image ?? user.image,
           });
         } else {
           console.warn("❌ Could not find user in DB for clerkId:", user.clerkId);
@@ -154,7 +154,7 @@ const ProfileScreen = () => {
       <ScrollView style={styles.container}>
         {/* User Info Card */}
         <Card style={styles.userCard}>
-          <Image source={{ uri: user.profilePic }} style={styles.avatar} />
+          <Image source={{ uri: user.image }} style={styles.avatar} />
           <Text style={styles.userName}>{user.name}</Text>
           {user.email && <Text>{user.email}</Text>}
 
