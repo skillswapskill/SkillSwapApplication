@@ -21,12 +21,15 @@ export default function RedeemCredits() {
 
   const conversionRate = 1000;
 
+  const API_BASE =
+  process.env.EXPO_PUBLIC_API_BASE_URL?.replace(/\/$/, "") || "http://10.0.2.2:3000";
+
   // Fetch user data
   useEffect(() => {
     const fetchUserData = async () => {
       if (!isSignedIn) return;
       try {
-        const res = await apiClient.post("/api/users/sync", {
+        const res = await apiClient.post(`${API_BASE}/api/users/sync`, {
           clerkId: user.id,
           name: user.fullName,
           email: user.primaryEmailAddress?.emailAddress,
@@ -67,7 +70,7 @@ export default function RedeemCredits() {
 
     setIsSubmitting(true);
     try {
-      const response = await apiClient.post("/api/credits/redeem", {
+      const response = await apiClient.post(`${API_BASE}/api/credits/redeem`, {
         userId: mongoUserId,
         creditsToRedeem: creditsToDeduct,
         skillCoinsToReceive: coinsToReceive,
@@ -161,7 +164,17 @@ export default function RedeemCredits() {
           <Text>🚀 Premium currency coming soon!</Text>
         </View>
 
-        <Footer />
+         {/* Floating Icon */}
+                <View style={styles.floatingIcon}>
+                  <Image
+                    source={require("../../assets/images/skillSwap.png")}
+                    style={styles.iconImage}
+                  />
+                </View>
+                {/* Footer */}
+                <View style={styles.footer}>
+                  <Footer />
+                </View>
       </ScrollView>
     </View>
   );
@@ -178,11 +191,11 @@ const styles = StyleSheet.create({
     paddingHorizontal: 15,
   },
   separator: { height: 1, backgroundColor: "#ccc", marginVertical: 6 },
-  logo: { width: 40, height: 40, resizeMode: "contain" },
-  title1: { fontSize: 20, fontWeight: "bold", color: "#3b7dceff" },
+  logo: { width: 40, height: 40, resizeMode: "contain" , top:10 },
+  title1: { fontSize: 20, fontWeight: "bold", color: "#3b7dceff" ,left:50 , bottom:25  },
   info: { marginTop: 10 },
   container: { padding: 16, backgroundColor: "#f1f1f1" },
-  card: { backgroundColor: "white", borderRadius: 12, padding: 16, marginBottom: 16 },
+  card: { backgroundColor: "white", borderRadius: 12, padding: 16, marginBottom: 20 },
   title: { fontSize: 18, fontWeight: "bold", marginBottom: 8 },
   inputRow: { flexDirection: "row", marginTop: 10 },
   input: { flex: 1, borderWidth: 1, borderColor: "#ccc", borderRadius: 8, padding: 10 },
@@ -190,5 +203,16 @@ const styles = StyleSheet.create({
   outlineButtonText: { fontWeight: "bold" },
   button: { marginTop: 12, padding: 14, borderRadius: 8, alignItems: "center" },
   buttonText: { color: "white", fontWeight: "bold" },
+  floatingIcon: {
+    position: "absolute",
+    bottom: 0,
+    left: 20,
+    backgroundColor: "#f1f1f1",
+    padding: 10,
+    borderRadius: 30,
+    elevation: 5,
+  },
+  iconImage: { width: 24, height: 24 },
+  footer: {top:40},
 });
 
